@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>杂项问题归档</title>
+      <link href="/2023/081616452.html"/>
+      <url>/2023/081616452.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="1-WSL启动失败"><a href="#1-WSL启动失败" class="headerlink" title="1 WSL启动失败"></a>1 WSL启动失败</h1><p>问题：尝试启动wsl时失败</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ wsl适用于 Linux 的 Windows 子系统实例已终止。</code></pre><p>解决：在<strong>管理员身份下</strong>运行</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ net stop LxxxManager$ net start LxssManager</code></pre><p>如果不是admin可能会报错 <code>发生系统错误 5。</code></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> misc </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> misc </tag>
+            
+            <tag> 中文 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/2023/081316107.html"/>
       <url>/2023/081316107.html</url>
