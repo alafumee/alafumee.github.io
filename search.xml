@@ -4,11 +4,38 @@
   
     
     <entry>
+      <title>SPR</title>
+      <link href="/2023/082560493.html"/>
+      <url>/2023/082560493.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="Paper-notes-Data-Efficient-Reinforcement-Learning-with-Self-Predictive-Representations-SPR"><a href="#Paper-notes-Data-Efficient-Reinforcement-Learning-with-Self-Predictive-Representations-SPR" class="headerlink" title="Paper notes: Data-Efficient Reinforcement Learning with Self-Predictive Representations (SPR)"></a>Paper notes: Data-Efficient Reinforcement Learning with Self-Predictive Representations (SPR)</h1><p><a href="http://arxiv.org/abs/2007.05929">http://arxiv.org/abs/2007.05929</a></p><p>Published at ICLR 2021.</p><h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>Data efficiency in Q-learning (for playing Atari games) is a problem. Learning a representation of states can boost sample efficiency and help generalization. Forcing representations to be temporally predictive and consistent and using data augmentation (pixel-based setting) train a better representation.</p><h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p><img src="/image/SPR/1692976244789.png" alt="1692976244789"></p><p><img src="/image/SPR/1692977180091.png" alt="1692977180091"></p><p>Highlights:</p><ul><li><p>Use separate online encoder and target encoder (updated through EMA but no gradient step)</p><ul><li>EMA: $\theta_m\gets \tau \theta_m + (1-\tau)\theta_o$</li></ul></li><li><p>Self-supervised prediction through a learned transition model</p></li><li><p>Projection heads (why do we have to use that? and the additional head $q$ ?)</p></li><li><p>Cosine similarity loss</p><p>$$<br>\mathcal{L}^{\rm SPR}<em>\theta(s</em>{t:t+K}, a_{t:t+K})&#x3D;-\sum_{k&#x3D;1}^K \frac{\tilde{y}<em>{t+k}^\top}{||\tilde{y}</em>{t+k}||<em>2}\frac{\hat{y}</em>{t+k}}{||\hat{y}_{t+k}||_2}<br>$$</p></li></ul><p>Note:</p><ul><li>The authors’ implementation includes $g_o$ in the Q-learning head.</li><li>The authors claim that when data augmentation is used, $\tau$ can be 0 (fully online) to do well.</li></ul><h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p><img src="/image/SPR/1692977266038.png" alt="1692977266038"></p><p>SOTA performance (using data augmentation) with limited (100k) interaction budget.</p><h2 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h2><ul><li>How to deal with stochastic dynamics?</li><li>Can we further reduce experience needed on a new task through meta learning or pretraining?</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Self-supervised RL </tag>
+            
+            <tag> Representation learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>杂项问题归档</title>
       <link href="/2023/081616452.html"/>
       <url>/2023/081616452.html</url>
       
-        <content type="html"><![CDATA[<h1 id="1-WSL启动失败"><a href="#1-WSL启动失败" class="headerlink" title="1 WSL启动失败"></a>1 WSL启动失败</h1><p>问题：尝试启动wsl时失败</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ wsl适用于 Linux 的 Windows 子系统实例已终止。</code></pre><p>解决：在<strong>管理员身份下</strong>运行</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ net stop LxxxManager$ net start LxssManager</code></pre><p>如果不是admin可能会报错 <code>发生系统错误 5。</code></p>]]></content>
+        <content type="html"><![CDATA[<h1 id="1-WSL启动失败"><a href="#1-WSL启动失败" class="headerlink" title="1 WSL启动失败"></a>1 WSL启动失败</h1><p>问题：尝试启动wsl时失败</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ wsl适用于 Linux 的 Windows 子系统实例已终止。</code></pre><p>解决：在<strong>管理员身份下</strong>运行</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ net stop LxssManager$ net start LxssManager</code></pre><p>如果不是admin可能会报错 <code>发生系统错误 5。</code></p>]]></content>
       
       
       <categories>

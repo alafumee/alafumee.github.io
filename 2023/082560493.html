@@ -4,15 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="杂项问题归档, alafumee&#39;s blog">
-    <meta name="description" content="1 WSL启动失败问题：尝试启动wsl时失败
-$ wsl
-适用于 Linux 的 Windows 子系统实例已终止。
-
-解决：在管理员身份下运行
-$ net stop LxssManager
-$ net start LxssManager
-">
+    <meta name="keywords" content="SPR, alafumee&#39;s blog">
+    <meta name="description" content="Paper notes: Data-Efficient Reinforcement Learning with Self-Predictive Representations (SPR)http://arxiv.org/abs/2007.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -24,7 +17,7 @@ $ net start LxssManager
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>杂项问题归档 | alafumee&#39;s blog</title>
+    <title>SPR | alafumee&#39;s blog</title>
     <link rel="icon" type="image/png" href="/dsicon.png">
     
 
@@ -232,12 +225,12 @@ $ net start LxssManager
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">杂项问题归档</h1>
+                    <h1 class="description center-align post-title">SPR</h1>
                 </div>
             </div>
         </div>
@@ -261,12 +254,12 @@ $ net start LxssManager
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/misc/">
-                                <span class="chip bg-color">misc</span>
+                            <a href="/tags/Self-supervised-RL/">
+                                <span class="chip bg-color">Self-supervised RL</span>
                             </a>
                         
-                            <a href="/tags/%E4%B8%AD%E6%96%87/">
-                                <span class="chip bg-color">中文</span>
+                            <a href="/tags/Representation-learning/">
+                                <span class="chip bg-color">Representation learning</span>
                             </a>
                         
                     </div>
@@ -277,8 +270,8 @@ $ net start LxssManager
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/misc/" class="post-category">
-                                misc
+                            <a href="/categories/Paper/" class="post-category">
+                                Paper
                             </a>
                         
                     </div>
@@ -290,7 +283,7 @@ $ net start LxssManager
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2023-08-16
+                    2023-08-25
                 </div>
                 
 
@@ -314,15 +307,37 @@ $ net start LxssManager
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="1-WSL启动失败"><a href="#1-WSL启动失败" class="headerlink" title="1 WSL启动失败"></a>1 WSL启动失败</h1><p>问题：尝试启动wsl时失败</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">$ wsl
-适用于 Linux 的 Windows 子系统实例已终止。</code></pre>
-
-<p>解决：在<strong>管理员身份下</strong>运行</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">$ net stop LxssManager
-$ net start LxssManager</code></pre>
-
-<p>如果不是admin可能会报错 <code>发生系统错误 5。</code></p>
+                <h1 id="Paper-notes-Data-Efficient-Reinforcement-Learning-with-Self-Predictive-Representations-SPR"><a href="#Paper-notes-Data-Efficient-Reinforcement-Learning-with-Self-Predictive-Representations-SPR" class="headerlink" title="Paper notes: Data-Efficient Reinforcement Learning with Self-Predictive Representations (SPR)"></a>Paper notes: Data-Efficient Reinforcement Learning with Self-Predictive Representations (SPR)</h1><p><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2007.05929">http://arxiv.org/abs/2007.05929</a></p>
+<p>Published at ICLR 2021.</p>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>Data efficiency in Q-learning (for playing Atari games) is a problem. Learning a representation of states can boost sample efficiency and help generalization. Forcing representations to be temporally predictive and consistent and using data augmentation (pixel-based setting) train a better representation.</p>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p><img src="/image/SPR/1692976244789.png" alt="1692976244789"></p>
+<p><img src="/image/SPR/1692977180091.png" alt="1692977180091"></p>
+<p>Highlights:</p>
+<ul>
+<li><p>Use separate online encoder and target encoder (updated through EMA but no gradient step)</p>
+<ul>
+<li>EMA: $\theta_m\gets \tau \theta_m + (1-\tau)\theta_o$</li>
+</ul>
+</li>
+<li><p>Self-supervised prediction through a learned transition model</p>
+</li>
+<li><p>Projection heads (why do we have to use that? and the additional head $q$ ?)</p>
+</li>
+<li><p>Cosine similarity loss</p>
+<p>$$<br>\mathcal{L}^{\rm SPR}<em>\theta(s</em>{t:t+K}, a_{t:t+K})&#x3D;-\sum_{k&#x3D;1}^K \frac{\tilde{y}<em>{t+k}^\top}{||\tilde{y}</em>{t+k}||<em>2}\frac{\hat{y}</em>{t+k}}{||\hat{y}_{t+k}||_2}<br>$$</p>
+</li>
+</ul>
+<p>Note:</p>
+<ul>
+<li>The authors’ implementation includes $g_o$ in the Q-learning head.</li>
+<li>The authors claim that when data augmentation is used, $\tau$ can be 0 (fully online) to do well.</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p><img src="/image/SPR/1692977266038.png" alt="1692977266038"></p>
+<p>SOTA performance (using data augmentation) with limited (100k) interaction budget.</p>
+<h2 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h2><ul>
+<li>How to deal with stochastic dynamics?</li>
+<li>Can we further reduce experience needed on a new task through meta learning or pretraining?</li>
+</ul>
 
                 
             </div>
@@ -349,7 +364,7 @@ $ net start LxssManager</code></pre>
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://alafumee.github.io/2023/081616452.html">https://alafumee.github.io/2023/081616452.html</a>
+                    <a href="https://alafumee.github.io/2023/082560493.html">https://alafumee.github.io/2023/082560493.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -387,12 +402,12 @@ $ net start LxssManager</code></pre>
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/misc/">
-                                    <span class="chip bg-color">misc</span>
+                                <a href="/tags/Self-supervised-RL/">
+                                    <span class="chip bg-color">Self-supervised RL</span>
                                 </a>
                             
-                                <a href="/tags/%E4%B8%AD%E6%96%87/">
-                                    <span class="chip bg-color">中文</span>
+                                <a href="/tags/Representation-learning/">
+                                    <span class="chip bg-color">Representation learning</span>
                                 </a>
                             
                         </div>
@@ -438,9 +453,10 @@ $ net start LxssManager</code></pre>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
                 <a href="/2023/082560493.html">
                     <div class="card-image">
@@ -458,9 +474,9 @@ $ net start LxssManager</code></pre>
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-08-25
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-25
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -473,6 +489,7 @@ $ net start LxssManager</code></pre>
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -495,13 +512,13 @@ $ net start LxssManager</code></pre>
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/081316107.html">
+                <a href="/2023/081616452.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="杂项问题归档">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">杂项问题归档</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -512,15 +529,31 @@ $ net start LxssManager</code></pre>
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-13
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-16
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Yunzhe Zhang
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/misc/" class="post-category">
+                                    misc
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/misc/">
+                        <span class="chip bg-color">misc</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%B8%AD%E6%96%87/">
+                        <span class="chip bg-color">中文</span>
+                    </a>
+                    
                 </div>
                 
             </div>
