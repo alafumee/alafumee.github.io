@@ -35,7 +35,7 @@
       <link href="/2023/081616452.html"/>
       <url>/2023/081616452.html</url>
       
-        <content type="html"><![CDATA[<h1 id="1-WSL启动失败"><a href="#1-WSL启动失败" class="headerlink" title="1 WSL启动失败"></a>1 WSL启动失败</h1><p>问题：尝试启动wsl时失败</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ wsl适用于 Linux 的 Windows 子系统实例已终止。</code></pre><p>解决：在<strong>管理员身份下</strong>运行</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ net stop LxssManager$ net start LxssManager</code></pre><p>如果不是admin可能会报错 <code>发生系统错误 5。</code></p>]]></content>
+        <content type="html"><![CDATA[<h1 id="1-WSL启动失败"><a href="#1-WSL启动失败" class="headerlink" title="1 WSL启动失败"></a>1 WSL启动失败</h1><p>问题：尝试启动wsl时失败</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ wsl适用于 Linux 的 Windows 子系统实例已终止。</code></pre><p>解决：在<strong>管理员身份下</strong>运行</p><pre class="language-bash" data-language="bash"><code class="language-bash">$ net stop LxssManager$ net start LxssManager</code></pre><p>如果不是admin可能会报错 <code>发生系统错误 5。</code></p><h1 id="2-清除Hexo网页缓存"><a href="#2-清除Hexo网页缓存" class="headerlink" title="2 清除Hexo网页缓存"></a>2 清除Hexo网页缓存</h1><p>问题：某些时候更改 <code>_config.yaml</code> 之后更改没有应用</p><p>解决：删除 <code>db.json</code> 之后重新生成网页</p>]]></content>
       
       
       <categories>
