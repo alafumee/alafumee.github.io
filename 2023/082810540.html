@@ -4,11 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="SPR, alafumee&#39;s blog">
+    <meta name="keywords" content="APS, alafumee&#39;s blog">
     <meta name="description" content="Paper
-notes: Data-Efficient Reinforcement Learning with Self-Predictive
-Representations (SPR)
-http://arxiv.org/abs/20">
+notes: APS: Active Pretraining with Successor Features
+Background &amp;amp; Motivation
+Unsupervised pretraining RL ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +20,7 @@ http://arxiv.org/abs/20">
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>SPR | alafumee&#39;s blog</title>
+    <title>APS | alafumee&#39;s blog</title>
     <link rel="icon" type="image/png" href="/dsicon.png">
     
 
@@ -228,12 +228,12 @@ http://arxiv.org/abs/20">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">SPR</h1>
+                    <h1 class="description center-align post-title">APS</h1>
                 </div>
             </div>
         </div>
@@ -257,12 +257,12 @@ http://arxiv.org/abs/20">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Self-supervised-RL/">
-                                <span class="chip bg-color">Self-supervised RL</span>
+                            <a href="/tags/Unsupervised-pretraining-RL/">
+                                <span class="chip bg-color">Unsupervised pretraining RL</span>
                             </a>
                         
-                            <a href="/tags/Representation-learning/">
-                                <span class="chip bg-color">Representation learning</span>
+                            <a href="/tags/Sucessor-feature/">
+                                <span class="chip bg-color">Sucessor feature</span>
                             </a>
                         
                     </div>
@@ -286,7 +286,7 @@ http://arxiv.org/abs/20">
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2023-08-25
+                    2023-08-28
                 </div>
                 
 
@@ -311,57 +311,141 @@ http://arxiv.org/abs/20">
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1
-id="paper-notes-data-efficient-reinforcement-learning-with-self-predictive-representations-spr">Paper
-notes: Data-Efficient Reinforcement Learning with Self-Predictive
-Representations (SPR)</h1>
-<p><a target="_blank" rel="noopener" href="http://arxiv.org/abs/2007.05929"
-class="uri">http://arxiv.org/abs/2007.05929</a></p>
-<p>Published at ICLR 2021.</p>
-<h2 id="motivation">Motivation</h2>
-<p>Data efficiency in Q-learning (for playing Atari games) is a problem.
-Learning a representation of states can boost sample efficiency and help
-generalization. Forcing representations to be temporally predictive and
-consistent and using data augmentation (pixel-based setting) train a
-better representation.</p>
+id="paper-notes-aps-active-pretraining-with-successor-features">Paper
+notes: APS: Active Pretraining with Successor Features</h1>
+<h2 id="background--motivation">Background &amp; Motivation</h2>
+<p>Unsupervised pretraining RL enables data-efficient adaptation to
+downstream tasks by reward-free pretraining. Present methods mainly fall
+in two categories that design intrinsic reward for agents during
+pretraining.</p>
+<p>The first category is based on maximizing the mutual information
+between task variables (<span class="math inline">\(p(z)\)</span>) and
+their behavior in terms of state visitation (<span
+class="math inline">\(p(s)\)</span>) to encourage learning
+distinguishable task conditioned behaviors. VISR (Hansen et al., 2020)
+objective: <span class="math inline">\(\max H(z) − H(s|z)\)</span>, VISR
+proposes a successor features based variational approximation to
+maximize a variational lower bound of the intractable conditional
+entropy <span class="math inline">\(−H(s|z)\)</span>. VISR proves
+effective but lacks exploration.</p>
+<p>Another category is based on maximizing the entropy of the states
+induced by the policy <span class="math inline">\(\max H(s)\)</span>.
+APT by Liu &amp; Abbeel (2021) show maximizing a particle-based entropy
+in a lower dimensional abstraction space can boost data efficiency and
+asymptotic performance. But APT is task agnostic and does not adapt
+efficiently to new task.</p>
+<p>APS optimizes the mutual information objective <span
+class="math inline">\(I(s;z)=H(s)-H(s|z)\)</span>. It uses APT to
+optimize the state entropy term and optimizes a lower bound of the
+conditional entropy term with successor features.</p>
+<p>Successor features: Assume for a set of tasks $r(s,a,s')=(s,a,s')^w $
+where <span class="math inline">\(w\)</span> is the task vector. Then
+<span
+class="math inline">\(Q(s,a)=\mathbb{E}_{s_t=s,a_t=a}\left[\sum_{l=0}^\infty\gamma^l\phi(s_{t+l},
+a_{t+l}, s_{t+l+1})\right]^\top w:=\psi^\pi(s,a)^\top w\)</span>, <span
+class="math inline">\(\psi^\pi(s,a)\)</span> is called successor
+feature. <span class="math inline">\(\psi^\pi\)</span> can be viewed as
+a multi-dimensional value function that can adapt to multiple tasks.</p>
 <h2 id="method">Method</h2>
-<p><img src="image/SPR/1692976244789.png" alt="1692976244789" /></p>
-<p><img src="image/SPR/1692977180091.png" alt="1692977180091" /></p>
-<p>Highlights:</p>
-<ul>
-<li><p>Use separate online encoder and target encoder (updated through
-EMA but no gradient step)</p>
-<ul>
-<li>EMA: <span class="math inline">\(\theta_m\gets \tau \theta_m +
-(1-\tau)\theta_o\)</span></li>
-</ul></li>
-<li><p>Self-supervised prediction through a learned transition
-model</p></li>
-<li><p>Projection heads (why do we have to use that? and the additional
-head <span class="math inline">\(q\)</span> ?)</p></li>
-<li><p>Cosine similarity loss</p>
+<p>VISR objective is <span class="math inline">\(J_{\rm
+VISR}^\theta=-\mathbb{E}_{s,z}[\log q(z|s)]\)</span> where <span
+class="math inline">\(q(z|s)\)</span> is a variational approximation of
+the true distribution, trained through maximizing the log-likelihood of
+samples. VISR also restricts <span class="math inline">\(z\equiv
+w\)</span> and <span class="math inline">\(||\phi(s)||_2=1\)</span>, and
+parameterizes the discriminator <span
+class="math inline">\(q(z|s)\)</span> as the Von Mises-Fisher
+distribution with a scale parameter of 1: intrinsic reward <span
+class="math inline">\(r_{\rm VISR}(s,a,s&#39;)=\log q(w|s)=\phi(s)^\top
+w\)</span>.</p>
+<p>APT estimates latent state entropy using a partical-based estimator
+<span class="math inline">\(J_{\rm APT}^\theta=\hat{H}_{\rm
+APT}(h)=\sum_{i=1}^n \log \left(1+\frac{1}{k}\sum_{h^j_i\in
+N_k(h_i)}||h_i-h_i^j||^{n_h}_{n_h}\right)\)</span>, where <span
+class="math inline">\(N_k\)</span> denotes the <span
+class="math inline">\(k\)</span> nearest neightbors. Intrinsic reward
+<span class="math inline">\(r_{\rm APT}(s,a,s&#39;)= \log
+\left(1+\frac{1}{k}\sum_{h^j\in
+N_k(h)}||h-h_i||^{n_h}_{n_h}\right)\)</span>, <span
+class="math inline">\(h=f_\theta(s&#39;)\)</span>.</p>
+<p>APS optimizes the other decomposition of mutual information <span
+class="math inline">\(I(s;z)=H(s)-H(s|z)\)</span>. It estimates the
+conditional entropy by a variational lower bound <span
+class="math inline">\(q(s|z)\)</span>:</p>
 <p><span class="math display">\[
-\mathcal{L}^{\rm SPR}_\theta(s_{t:t+K}, a_{t:t+K})=-\sum_{k=1}^K
-\frac{\tilde{y}_{t+k}^\top}{||\tilde{y}_{t+k}||_2}\frac{\hat{y}_{t+k}}{||\hat{y}_{t+k}||_2}
-\]</span></p></li>
-</ul>
-<p>Note:</p>
-<ul>
-<li>The authors' implementation includes <span
-class="math inline">\(g_o\)</span> in the Q-learning head.</li>
-<li>The authors claim that when data augmentation is used, <span
-class="math inline">\(\tau\)</span> can be 0 (fully online) to do
-well.</li>
-</ul>
+\begin{align*}
+-H(s|z)&amp;=\sum_{s,z}p(s,z)\log p(s|z)\\ &amp;=\sum_{s,z}p(s,z)\log
+q(s|z)+\sum_zp(z)D_{KL}(p(\cdot|z)||q(\cdot|z))\\\
+&amp;\geq\mathbb{E}_{s,z}[\log q(s|z)].
+\end{align*}
+\]</span></p>
+<p>By restricting <span class="math inline">\(z\equiv w\)</span> with
+the Von Mises-Fisher distribution, similarly to VISR, we have <span
+class="math inline">\(r^{\rm exploitation}_{\rm APS}(s,a,s&#39;)=\log
+q(s|w)=\phi(s)^\top w\)</span>. The authors let the encoders <span
+class="math inline">\(f\)</span> and <span
+class="math inline">\(w\)</span> share weights, so <span
+class="math inline">\(r^{\rm exploration}_{\rm APS}(s,a,s&#39;)=\log
+\left(1+\frac{1}{k}\sum_{h^j\in
+N_k(h)}||h-h_i||^{n_h}_{n_h}\right)\)</span>, <span
+class="math inline">\(h=\phi(s&#39;)\)</span>.</p>
+<p>Training of the encoder <span class="math inline">\(\phi\)</span>:
+loss <span class="math inline">\(L=-\mathbb{E}_{s,w}[\log
+q(s|w)]=-\mathbb{E}_{s,w}[\phi(s)^\top w]\)</span>.</p>
+<p>The output layer of <span class="math inline">\(\phi\)</span> is L2
+normalized, task vector <span class="math inline">\(w\)</span> is
+randomly sampled from a uniform distribution over the unit circle.</p>
+<p><img src="image/APS/1693318301003.png" alt="1693318301003" /></p>
+<p>When testing the pre-trained successor features <span
+class="math inline">\(\psi\)</span>, we need to find task vector <span
+class="math inline">\(w\)</span> from the rewards. To do so, we rollout
+10 episodes (or 40K steps, whichever comes first) with the trained APS,
+each conditioned on a task vector chosen uniformly on a 5-dimensional
+sphere. From these initial episodes, we combine the data across all
+episodes and solve the linear regression problem. Then we fine-tune the
+pretrained model for 60K steps with the inferred task vector, and the
+average returns are compared.</p>
+<blockquote>
+<p>An intuition: different task variables represent different tasks with
+identical dynamics but different distributions of rewards? VISR-like
+method basically pretrains the network on multiple tasks.</p>
+<p>An implication of <span class="math inline">\(z\equiv w\)</span> is
+that a skill is correspondent to an underlying reward distribution. What
+about other interpretations of a skill? What is the relation between
+skill and goal conditioning?</p>
+</blockquote>
 <h2 id="results">Results</h2>
-<p><img src="image/SPR/1692977266038.png" alt="1692977266038" /></p>
-<p>SOTA performance (using data augmentation) with limited (100k)
-interaction budget.</p>
-<h2 id="questions">Questions</h2>
-<ul>
-<li>How to deal with stochastic dynamics?</li>
-<li>Can we further reduce experience needed on a new task through meta
-learning or pretraining?</li>
-</ul>
+<p><img src="image/APS/1693320333875.png" alt="1693320333875" /></p>
+<p>Table 3 shows fine-tuning and sharing encoder boost performance.</p>
+<p><img src="image/APS/1693320399583.png" alt="1693320399583" /></p>
+<p>Fig. 5 shows that "entropy maximization and variational successor
+features improves each other in a nontrivial way, and both are important
+to the performance gain of APS".</p>
+<p>APS achieves SOTA on 11 of 26 Atari games (6 for APT, 3 for VISR, 4
+for SPR, and 2 for SimPLe) and exhibits superhuman performance on 8 of
+26 games. SOTA on aggregate metrics (mean/median human normalized
+score).</p>
+<blockquote>
+<p>By the way, human normalized score is (agent score - random
+score)/(human score - random score).</p>
+</blockquote>
+<h2 id="comments">Comments</h2>
+<p>Are there some links between <span
+class="math inline">\(\psi\)</span> and <span
+class="math inline">\(\phi\)</span> ? <span
+class="math inline">\(\phi\)</span> seems to map states to the task
+variable space, and VISR reward is probably "imagining" a task with
+reward, but it's <span class="math inline">\(\phi^\top w\)</span>
+instead of <span class="math inline">\(\psi^\top w\)</span>.</p>
+<p>Can we choose something other than the Von Mises-Fisher
+distribution?</p>
+<blockquote>
+<p>CrossValidated: The von Mises-Fisher distribution is a distribution
+on the surface of a sphere. To make it as easy to visualize, think of a
+circle. The vM-F distribution has two parameters: the mean direction in
+which points are distributed on the circle, and how concentrated they
+are around the point on the circle in that mean direction.</p>
+</blockquote>
 
                 
             </div>
@@ -388,7 +472,7 @@ learning or pretraining?</li>
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://alafumee.github.io/2023/082560493.html">https://alafumee.github.io/2023/082560493.html</a>
+                    <a href="https://alafumee.github.io/2023/082810540.html">https://alafumee.github.io/2023/082810540.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -426,12 +510,12 @@ learning or pretraining?</li>
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Self-supervised-RL/">
-                                    <span class="chip bg-color">Self-supervised RL</span>
+                                <a href="/tags/Unsupervised-pretraining-RL/">
+                                    <span class="chip bg-color">Unsupervised pretraining RL</span>
                                 </a>
                             
-                                <a href="/tags/Representation-learning/">
-                                    <span class="chip bg-color">Representation learning</span>
+                                <a href="/tags/Sucessor-feature/">
+                                    <span class="chip bg-color">Sucessor feature</span>
                                 </a>
                             
                         </div>
@@ -477,9 +561,10 @@ learning or pretraining?</li>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+                <i class="far fa-dot-circle"></i>&nbsp;Current
+            </div>
             <div class="card">
                 <a href="/2023/082810540.html">
                     <div class="card-image">
@@ -497,9 +582,9 @@ learning or pretraining?</li>
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-08-28
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-28
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -512,6 +597,7 @@ learning or pretraining?</li>
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -534,13 +620,13 @@ learning or pretraining?</li>
                 Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/081616452.html">
+                <a href="/2023/082560493.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="杂项问题归档">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="SPR">
                         
-                        <span class="card-title">杂项问题归档</span>
+                        <span class="card-title">SPR</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -551,14 +637,14 @@ learning or pretraining?</li>
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-08-25
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/misc/" class="post-category">
-                                    misc
+                            <a href="/categories/Paper/" class="post-category">
+                                    Paper
                                 </a>
                             
                             
@@ -568,12 +654,12 @@ learning or pretraining?</li>
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/misc/">
-                        <span class="chip bg-color">misc</span>
+                    <a href="/tags/Self-supervised-RL/">
+                        <span class="chip bg-color">Self-supervised RL</span>
                     </a>
                     
-                    <a href="/tags/%E4%B8%AD%E6%96%87/">
-                        <span class="chip bg-color">中文</span>
+                    <a href="/tags/Representation-learning/">
+                        <span class="chip bg-color">Representation learning</span>
                     </a>
                     
                 </div>
